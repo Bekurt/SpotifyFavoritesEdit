@@ -12,8 +12,19 @@ const router = createRouter({
             path: '/',
             name: 'home',
             component: () => import('@/views/HomeView.vue'),
+            beforeEnter: requireAuth,
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: () => import('@/views/LoginView.vue'),
+            beforeEnter: () => useAuthStore().$reset(),
         },
     ],
 })
 
 export default router
+
+function requireAuth() {
+    return useAuthStore().isAuthenticated ?? { name: 'login' }
+}
