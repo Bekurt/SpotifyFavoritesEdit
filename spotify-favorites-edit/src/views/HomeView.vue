@@ -1,11 +1,13 @@
-<script setup lang="tsx">
-import { ref } from 'vue'
-
-const counter = ref(0)
-const Title = () => <h1>WELCOME BACK TSX: {counter.value}</h1>
-</script>
+<script setup lang="tsx"></script>
 
 <template>
-    <Title @click="counter++" class="w-full bg-red-200 p-3" />
-    <RouterLink :to="{ name: 'login' }">login</RouterLink>
+    <main class="flex h-screen w-full flex-col items-center justify-center gap-10 bg-neutral-900">
+        <h1 class="text-7xl font-extrabold text-green-600">Spotify Favorites Edit</h1>
+        <RouterLink
+            :to="{ name: 'login' }"
+            class="rounded-3xl bg-neutral-600 px-8 py-2 text-3xl font-semibold text-white"
+        >
+            Vai al login
+        </RouterLink>
+    </main>
 </template>

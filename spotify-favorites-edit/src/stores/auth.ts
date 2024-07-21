@@ -23,14 +23,13 @@ export const useAuthStore = defineStore('authentication', () => {
      * @param codeVerifier same as getAccessToken
      */
     function getToken(code: string, codeVerifier: string): void {
-        getAccessToken(code, codeVerifier)
-            .then((res) => {
-                accessToken.value = res
-                axios.defaults.headers.common = {
-                    Authorization: `${res.token_type} ${res.access_token}`,
-                }
-            })
-            .catch((err) => console.error(err))
+        getAccessToken(code, codeVerifier).then((res) => {
+            accessToken.value = res
+            axios.defaults.headers.common = {
+                Authorization: `${res.token_type} ${res.access_token}`,
+            }
+            router.push({ name: 'control-panel' })
+        })
     }
 
     /**

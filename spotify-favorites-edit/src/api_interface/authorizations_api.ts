@@ -23,7 +23,7 @@ export function requestUserAuthorization(codeChallenge: string): string {
     const queryParams = {
         client_id: import.meta.env.VITE_SPOTIFY_ID,
         response_type: 'code',
-        redirect_uri: 'http://localhost:5173/home',
+        redirect_uri: import.meta.env.VITE_SPOTIFY_REDIRECT_URI,
         scope: scopes.reduce((acc, scopeItem) => `${acc} ${scopeItem}`, ''),
         code_challenge_method: 'S256',
         code_challenge: codeChallenge,
@@ -44,7 +44,7 @@ export function getAccessToken(code: string, codeVerifier: string): Promise<Toke
     const payload = {
         grant_type: 'authorization_code',
         code: code,
-        redirect_uri: 'http://localhost:5173/home',
+        redirect_uri: import.meta.env.VITE_SPOTIFY_REDIRECT_URI,
         scope: scopes.reduce((acc, scopeItem) => `${acc} ${scopeItem}`, ''),
         client_id: import.meta.env.VITE_SPOTIFY_ID,
         code_verifier: codeVerifier,
