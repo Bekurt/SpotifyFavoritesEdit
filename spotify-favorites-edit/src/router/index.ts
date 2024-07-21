@@ -10,15 +10,13 @@ const router = createRouter({
         },
         {
             path: '/',
-            name: 'home',
-            component: () => import('@/views/HomeView.vue'),
-            beforeEnter: requireAuth,
-        },
-        {
-            path: '/login',
-            name: 'login',
-            component: () => import('@/views/LoginView.vue'),
-            beforeEnter: () => useAuthStore().$reset(),
+            children: [
+                {
+                    path: 'home',
+                    name: 'home',
+                    component: () => import('@/views/HomeView.vue'),
+                },
+            ],
         },
     ],
 })
@@ -26,5 +24,5 @@ const router = createRouter({
 export default router
 
 function requireAuth() {
-    return useAuthStore().isAuthenticated ?? { name: 'login' }
+    return useAuthStore().isAuthenticated ? true : { name: 'login' }
 }

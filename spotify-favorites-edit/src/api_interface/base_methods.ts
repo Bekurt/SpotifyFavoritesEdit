@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/stores/auth'
 import axios from 'axios'
 
 /**
@@ -22,14 +23,15 @@ export interface PaginatedResponse<T> {
  * Restituire res.data al posto di res permette di usare "as Promise<T>" to let Typescript
  * recognize the return value of the promise
  *
- * Parametri:
- * - method: tipo di richiesta, limitato dalla specifica di Method
- * - url: stringa con l'url a cui inviare la richiesta
- * - payload: __*Oggetto*__ con info addizionali, come body di una post request od opzioni di axios
- * */
-export function apiRequest<T extends Object>(method: Method, url: string, payload: T) {
+ * @param method tipo di richiesta, limitato dalla specifica di Method
+ * @param url stringa con l'url a cui inviare la richiesta
+ * @param payload __*Oggetto*__ con info addizionali, come body di una post request od opzioni di axios
+ * @param config axios configuraton object
+ * @returns Promise con la risposta del server
+ */
+export function apiRequest(method: Method, url: string, payload: Object, config?: Object) {
     return new Promise((resolve, reject) => {
-        axios[method](url, payload)
+        axios[method](url, payload, config)
             .then((res) => resolve(res.data))
             .catch((err: any) => reject(err))
     })
@@ -40,13 +42,20 @@ export function apiRequest<T extends Object>(method: Method, url: string, payloa
  * esegue il refresh del token e ripete la richiesta fallita. Per via della natura globale del
  * token non sono riuscito a disaccoppiare questa funzione dallo store di autenticazione.
  * */
-export function requestWithTokenUpdate<T extends Object>(method: Method, url: string, payload: T) {
+export function apiRequestWithRefresh(method: Method, url: string, payload: Object, config?: Object) {
     return new Promise((resolve, reject) => {
-        axios[method](url, payload)
+        axios[method](url, payload, config)
             .then((res) => resolve(res.data))
             .catch((err: any) => {
                 if (err.response?.status === 401 && err.response?.data?.code === 'token_not_valid') {
-                } else reject(err.response)
+                    useAuthStore()
+                        .refreshToken()
+                        ?.then(() =>
+                            apiRequest(method, url, payload, config)
+                                .then((res: any) => res.data)
+                                .catch((err: any) => reject(err))
+                        )
+                } else reject(err)
             })
     })
 }
@@ -73,6 +82,6 @@ export function addQueryParams(url: string, queryParams: Record<string, any>) {
 /**
  * Adds the base spotify endpoint to the input
  */
-export function addBaseSpotifyPath(endpoint: string) {
+export function addBasePath(endpoint: string) {
     return `https://accounts.spotify.com${endpoint}`
 }
