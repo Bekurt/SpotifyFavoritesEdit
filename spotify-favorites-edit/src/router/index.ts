@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/stores/auth'
+import { useTokenStore } from '@/stores/token'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -15,13 +15,13 @@ const router = createRouter({
                     path: 'home',
                     name: 'home',
                     component: () => import('@/views/HomeView.vue'),
-                    beforeEnter: () => useAuthStore().$reset(),
+                    beforeEnter: () => useTokenStore().$reset(),
                 },
                 {
                     path: 'login',
                     name: 'login',
                     component: () => import('@/views/LoginView.vue'),
-                    beforeEnter: () => useAuthStore().$reset(),
+                    beforeEnter: () => useTokenStore().$reset(),
                 },
                 {
                     path: 'control-panel',
@@ -36,6 +36,8 @@ const router = createRouter({
 
 export default router
 
+const { isAuthenticated } = useTokenStore()
+
 function requireAuth() {
-    return useAuthStore().isAuthenticated ? true : { name: 'login' }
+    return isAuthenticated ? true : { name: 'login' }
 }
