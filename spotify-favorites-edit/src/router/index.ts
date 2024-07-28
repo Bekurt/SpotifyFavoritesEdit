@@ -5,12 +5,12 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
-            path: '/:pathMatcher(.*)',
-            redirect: { name: 'home' },
-        },
-        {
             path: '/',
             children: [
+                {
+                    path: '/:pathMatcher(.*)',
+                    redirect: { name: 'home' },
+                },
                 {
                     path: 'home',
                     name: 'home',
@@ -36,8 +36,6 @@ const router = createRouter({
 
 export default router
 
-const { isAuthenticated } = useTokenStore()
-
 function requireAuth() {
-    return isAuthenticated ? true : { name: 'login' }
+    return useTokenStore().isAuthenticated ? true : { name: 'login' }
 }
