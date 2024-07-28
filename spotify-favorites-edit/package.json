@@ -11,9 +11,11 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "@heroicons/vue": "^2.1.5",
     "@tanstack/vue-query": "^5.51.1",
     "axios": "^1.7.2",
     "pinia": "^2.1.7",
+    "spotify-types": "^1.0.7",
     "vee-validate": "^4.13.2",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3"

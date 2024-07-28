@@ -98,7 +98,12 @@ export const useTokenStore = defineStore('token', () => {
      * Completamente analoga ad "apiRequest", ma se il server restituisce un 401 per via del token scaduto
      * esegue il refresh del token e ripete la richiesta fallita.
      * */
-    function apiRequestWithRefresh<Datatype>(method: Method, url: string, payload?: Object, config?: Object) {
+    function apiRequestWithRefresh<Datatype>(
+        method: Method,
+        url: string,
+        payload?: Object,
+        config?: Object
+    ): Promise<Datatype> {
         return new Promise((resolve, reject) => {
             apiRequest<Datatype>(method, url, payload, config)
                 .then((res) => resolve(res))
